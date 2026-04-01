@@ -13,7 +13,8 @@ function App() {
 
   useEffect(() => {
     if (!token) return;
-    axios.get("http://localhost:3001/api/auth/me", {
+    axios.get(`${import.meta.env.VITE_API_URL || "http://localhost:3001"}/api/auth/me`
+  , {
       headers: { Authorization: `Bearer ${token}` }
     }).then((res) => setUserRole(res.data.role))
       .catch(() => handleLogout());
