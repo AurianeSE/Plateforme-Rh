@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  password  String
+  role      String     @default("employee")
+  createdAt DateTime   @default(now())
+  employee  Employee?
+  leaves    Leave[]
+}
+
+model Employee {
+  id         Int      @id @default(autoincrement())
+  userId     Int      @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone      String?
+  department String
+  position   String
+  status     String   @default("actif")
+  hireDate   DateTime
+  createdAt  DateTime @default(now())
+}
+
+model Leave {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  startDate DateTime
+  endDate   DateTime
+  days      Int
+  reason    String?
+  status    String   @default("en attente")
+  createdAt DateTime @default(now())
+}
