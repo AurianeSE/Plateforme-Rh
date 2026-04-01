@@ -12,14 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 //Middlewares globaux 
-app.use(cors({
-    origin: [
-        "http://localhost:5173",
-        "https://plateforme-rh-one.vercel.app/"
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+app.use(cors());
 app.use(express.json()); //pour lire le JSON des requêtes
 
 //Routes
