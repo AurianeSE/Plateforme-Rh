@@ -8,14 +8,16 @@ datasource db {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  name      String
-  email     String     @unique
-  password  String
-  role      String     @default("employee")
-  createdAt DateTime   @default(now())
-  employee  Employee?
-  leaves    Leave[]
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  password      String
+  role          String         @default("employee")
+  createdAt     DateTime       @default(now())
+  employee      Employee?
+  leaves        Leave[]
+  attendances   Attendance[]
+  notifications Notification[]
 }
 
 model Employee {
@@ -31,14 +33,37 @@ model Employee {
 }
 
 model Leave {
-  id        Int      @id @default(autoincrement())
+  id        Int            @id @default(autoincrement())
   userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   type      String
   startDate DateTime
   endDate   DateTime
   days      Int
   reason    String?
-  status    String   @default("en attente")
+  status    String         @default("en attente")
+  createdAt DateTime       @default(now())
+}
+
+model Attendance {
+  id            Int       @id @default(autoincrement())
+  userId        Int
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date          DateTime
+  checkIn       DateTime?
+  breakStart    DateTime?
+  breakEnd      DateTime?
+  checkOut      DateTime?
+  workedMinutes Int?
+  createdAt     DateTime  @default(now())
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message   String
+  type      String   @default("info")
+  read      Boolean  @default(false)
   createdAt DateTime @default(now())
 }

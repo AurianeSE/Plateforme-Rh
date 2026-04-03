@@ -71,7 +71,19 @@ const updateStatus = async (req, res) => {
 
     const leave = await prisma.leave.update({
       where: { id: parseInt(req.params.id) },
-      data: { status }
+      data: { status },
+      include: { user: true }
+    });
+
+    // Créer une notification pour l'employé
+    const emoji = status === "approuvé" ? "✅" : "❌";
+    await prisma.notification.create({
+      data: {
+        userId: leave.userId,
+        message: `${emoji} Votre demande de congé du ${leave.startDate.toLocaleDateString("fr-FR")} au ${leave.endDate.toLocaleDateString("fr-FR")} a été ${status}.`,
+        type: status === "approuvé" ? "success" : "danger",
+        read: false
+      }
     });
 
     res.json({ message: `Demande ${status} avec succès`, leave });
