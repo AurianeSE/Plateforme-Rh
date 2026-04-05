@@ -350,6 +350,7 @@ function Employees({ API }) {
               {[
                 { label: "Nom complet *", key: "name", type: "text", placeholder: "Alice Dupont" },
                 { label: "Email *", key: "email", type: "email", placeholder: "alice@rh.com" },
+                  { label: !editTarget ? "Mot de passe *" : "Nouveau mot de passe (optionnel)", key: "password", type: "password", placeholder: "••••••••" },
                 { label: "Téléphone", key: "phone", type: "text", placeholder: "+229 97 00 00 00" },
                 { label: "Poste *", key: "position", type: "text", placeholder: "Développeur" },
                 { label: "Date d'embauche", key: "hireDate", type: "date", placeholder: "" },

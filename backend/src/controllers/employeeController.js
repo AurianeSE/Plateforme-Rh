@@ -1,13 +1,15 @@
 const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
 const getAll = async (req, res) => {
   try {
     const employees = await prisma.employee.findMany({
-      include: { user: { select: { name: true, email: true, role: true } } }
+      include: { user: { select: { id: true, name: true, email: true, role: true } } }
     });
     const result = employees.map((e) => ({
       id: e.id,
+      userId: e.userId,
       name: e.user.name,
       email: e.user.email,
       role: e.user.role,
@@ -38,18 +40,21 @@ const getOne = async (req, res) => {
 
 const create = async (req, res) => {
   try {
-    const { name, email, phone, department, position, role, hireDate } = req.body;
+    const { name, email, password, phone, department, position, role, hireDate } = req.body;
 
-    if (!name || !email || !department || !position) {
-      return res.status(400).json({ message: "Nom, email, département et poste sont requis" });
+    if (!name || !email || !password || !department || !position) {
+      return res.status(400).json({ message: "Nom, email, mot de passe, département et poste sont requis" });
     }
 
-    const bcrypt = require("bcryptjs");
+    if (password.length < 4) {
+      return res.status(400).json({ message: "Le mot de passe doit contenir au moins 4 caractères" });
+    }
+
     const user = await prisma.user.create({
       data: {
         name,
         email,
-        password: bcrypt.hashSync("password", 10),
+        password: bcrypt.hashSync(password, 10),
         role: role || "employee",
         employee: {
           create: {
@@ -75,15 +80,20 @@ const create = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const { name, email, phone, department, position, status } = req.body;
+    const { name, email, phone, department, position, status, password } = req.body;
     const employee = await prisma.employee.findUnique({
       where: { id: parseInt(req.params.id) }
     });
     if (!employee) return res.status(404).json({ message: "Employé introuvable" });
 
+    const userUpdate = { name, email };
+    if (password && password.length >= 4) {
+      userUpdate.password = bcrypt.hashSync(password, 10);
+    }
+
     await prisma.user.update({
       where: { id: employee.userId },
-      data: { name, email }
+      data: userUpdate
     });
 
     const updated = await prisma.employee.update({
@@ -111,4 +121,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getOne, create, update, remove };
+module.exports = { getAll, getOne, create, update, remove }; 
