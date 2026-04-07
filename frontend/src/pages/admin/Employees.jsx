@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Spinner from "../../components/Spinner";
 
 const DEPARTMENTS = [
   "Ressources Humaines", "Informatique", "Comptabilité",
@@ -200,7 +201,7 @@ function Employees({ API }) {
 
       {/* Tableau desktop */}
       {loading ? (
-        <div className="text-center py-12 text-slate-400 text-sm">Chargement...</div>
+        <Spinner text="Chargement des employés..." />
       ) : (
         <>
           {/* Desktop */}

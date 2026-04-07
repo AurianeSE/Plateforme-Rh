@@ -1,0 +1,147 @@
+.spinner-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.spinner-ring-outer {
+  position: absolute;
+  inset: -15px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top: 2px solid #a855f7;
+  border-right: 2px solid #c026d3;
+  animation: rotate-ring 2s linear infinite;
+  box-shadow: 0 0 10px #a855f7;
+}
+
+.spinner-ring-inner {
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  border-bottom: 1.5px solid #e879f9;
+  border-left: 1.5px solid #7c3aed;
+  animation: rotate-ring-reverse 1.5s linear infinite;
+}
+
+.spinner-logo {
+  position: absolute;
+  inset: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #2d1b4e, #0f0520);
+  animation: pulse-logo 2s ease-in-out infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.spinner-logo-text {
+  font-size: 28px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #e879f9, #a855f7, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.spinner-logo-sub {
+  font-size: 7px;
+  font-weight: 700;
+  color: #c084fc;
+  letter-spacing: 2px;
+  margin-top: 3px;
+  text-transform: uppercase;
+}
+
+.spinner-text {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.spinner-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #7c3aed, #e879f9, #a855f7, #7c3aed);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 2s linear infinite;
+}
+
+.spinner-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.spinner-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a855f7;
+  animation: fade-text 1.2s ease-in-out infinite;
+  box-shadow: 0 0 6px #a855f7;
+}
+
+.spinner-dot:nth-child(2) { animation-delay: 0.3s; }
+.spinner-dot:nth-child(3) { animation-delay: 0.6s; }
+
+.spinner-particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50% 50% 30% 30%;
+  animation: flame var(--dur) ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+@keyframes flame {
+  0%,100% { transform: rotate(var(--angle)) translateX(var(--dist)) scaleY(1);   opacity: var(--op); }
+  25%      { transform: rotate(calc(var(--angle) + 10deg)) translateX(calc(var(--dist) * 1.2)) scaleY(1.5); opacity: 1; }
+  75%      { transform: rotate(calc(var(--angle) - 10deg)) translateX(calc(var(--dist) * 0.9)) scaleY(0.8); opacity: 0.6; }
+}
+
+@keyframes rotate-ring {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes rotate-ring-reverse {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+@keyframes pulse-logo {
+  0%,100% { box-shadow: 0 0 20px #a855f7, 0 0 40px #7c3aed, 0 0 60px #c026d3; transform: scale(1); }
+  50%      { box-shadow: 0 0 30px #e879f9, 0 0 60px #a855f7, 0 0 90px #db2777; transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes fade-text {
+  0%,100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}

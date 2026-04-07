@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Spinner from "../../components/Spinner";
 
 function Attendance({ user, API }) {
   const [attendance, setAttendance] = useState(null);
@@ -68,20 +69,6 @@ function Attendance({ user, API }) {
   // Boutons de pointage
   const buttons = [
     {
-      action:   "checkin",
-      label:    "Pointer arrivée",
-      done:     !!attendance?.checkIn,
-      disabled: !!attendance?.checkIn,
-      bg:       "#16a34a",
-      icon: (
-        <svg width="20" height="20" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
-          <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/>
-          <polyline points="10 17 15 12 10 7"/>
-          <line x1="15" y1="12" x2="3" y2="12"/>
-        </svg>
-      ),
-    },
-    {
       action:   "break-start",
       label:    "Début de pause",
       done:     !!attendance?.breakStart,
@@ -126,9 +113,7 @@ function Attendance({ user, API }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-slate-400 text-sm">Chargement...</div>
-      </div>
+      <Spinner text="Chargement..." />
     );
   }
 
@@ -172,6 +157,20 @@ function Attendance({ user, API }) {
             </svg>
             Pointage d'aujourd'hui
           </h2>
+
+          {/* Info arrivée automatique */}
+          {attendance?.checkIn && (
+            <div className="flex items-center gap-2 p-3 rounded-xl mb-4"
+              style={{ background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
+              <svg width="16" height="16" fill="none" stroke="#16a34a" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              <p className="text-xs font-medium" style={{ color: "#16a34a" }}>
+                Arrivée enregistrée automatiquement à {formatHour(attendance.checkIn)} lors de votre connexion
+              </p>
+            </div>
+          )}
 
           {/* Boutons pointage */}
           <div className="grid grid-cols-2 gap-3 mb-5">

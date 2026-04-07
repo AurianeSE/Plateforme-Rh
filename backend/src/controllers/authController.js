@@ -27,18 +27,72 @@ const login = async (req, res) => {
       { expiresIn: "8h" }
     );
 
+    // Pointer automatiquement l'arrivée si c'est un employé
+    if (user.role === "employee") {
+      const today = new Date();
+      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+      // Vérifie si déjà pointé aujourd'hui
+      const existing = await prisma.attendance.findFirst({
+        where: { userId: user.id, date: startOfDay }
+      });
+
+      if (!existing) {
+        await prisma.attendance.create({
+          data: {
+            userId: user.id,
+            date: startOfDay,
+            checkIn: new Date(),
+          }
+        });
+        console.log(`✅ Arrivée automatique pointée pour ${user.name} à ${new Date().toLocaleTimeString("fr-FR")}`);
+      }
+    }
+
     res.json({
       message: "Connexion réussie",
       token,
       user: { id: user.id, name: user.name, email: user.email, role: user.role }
     });
+
   } catch (err) {
     res.status(500).json({ message: "Erreur serveur : " + err.message });
   }
 };
 
-const logout = (req, res) => {
-  res.json({ message: "Déconnexion réussie" });
+const logout = async (req, res) => {
+  try {
+    if (req.user && req.user.role === "employee") {
+      const today = new Date();
+      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+      const record = await prisma.attendance.findFirst({
+        where: { userId: req.user.id, date: startOfDay }
+      });
+
+      if (record && record.checkIn && !record.checkOut) {
+        const now = new Date();
+        let workedMinutes = Math.round((now - new Date(record.checkIn)) / 60000);
+
+        if (record.breakStart && record.breakEnd) {
+          workedMinutes -= Math.round(
+            (new Date(record.breakEnd) - new Date(record.breakStart)) / 60000
+          );
+        }
+
+        await prisma.attendance.update({
+          where: { id: record.id },
+          data: { checkOut: now, workedMinutes: Math.max(0, workedMinutes) }
+        });
+
+        console.log(`✅ Départ automatique pointé pour ${req.user.email}`);
+      }
+    }
+    res.json({ message: "Déconnexion réussie" });
+  } catch (err) {
+    console.error("Erreur logout:", err);
+    res.json({ message: "Déconnexion réussie" });
+  }
 };
 
 const me = async (req, res) => {

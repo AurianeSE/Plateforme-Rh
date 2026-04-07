@@ -33,12 +33,23 @@ function App() {
     setUser(userData);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      await axios.post(`${API}/api/auth/logout`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    }
+  } catch (err) {
+    console.error("Erreur logout:", err);
+  } finally {
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
     setPage("home");
-  };
+  }
+};
 
   if (loading) {
     return (

@@ -114,12 +114,12 @@ function Login({ onLogin, onBack, API }) {
           </form>
 
           <div className="mt-8 p-4 bg-slate-50 rounded-lg border border-slate-100">
-            <p className="text-xs font-semibold text-slate-400 mb-2">COMPTE DÉMO</p>
+            <p className="text-xs font-semibold text-slate-400 mb-2"></p>
             <p className="text-sm text-slate-600">
-              <span className="font-medium">Admin :</span> alice@rh.com / password
+              
             </p>
             <p className="text-sm text-slate-600">
-              <span className="font-medium">Employé :</span> bob@rh.com / password
+              
             </p>
           </div>
 

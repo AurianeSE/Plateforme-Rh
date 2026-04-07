@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 const getAll = async (req, res) => {
   try {
     const employees = await prisma.employee.findMany({
+      where: { user: { role: "employee" } },
       include: { user: { select: { id: true, name: true, email: true, role: true } } }
     });
     const result = employees.map((e) => ({
@@ -121,4 +122,4 @@ const remove = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getOne, create, update, remove }; 
+module.exports = { getAll, getOne, create, update, remove };

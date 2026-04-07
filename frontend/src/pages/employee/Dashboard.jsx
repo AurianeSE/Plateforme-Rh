@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Spinner from "../../components/Spinner";
 
 function Dashboard({ user, API }) {
   const [notifications, setNotifications] = useState([]);
@@ -84,9 +85,7 @@ function Dashboard({ user, API }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-slate-400 text-sm">Chargement...</div>
-      </div>
+      <Spinner text="Chargement..." />
     );
   }
 

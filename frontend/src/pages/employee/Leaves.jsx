@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Spinner from "../../components/Spinner";
 
 const LEAVE_TYPES = [
   "Congé annuel",
@@ -144,7 +145,7 @@ function Leaves({ user, API }) {
 
       {/* Liste */}
       {loading ? (
-        <div className="text-center py-12 text-slate-400 text-sm">Chargement...</div>
+        <Spinner text="Chargement..." />
       ) : filtered.length === 0 ? (
         <div className="bg-white rounded-xl border border-slate-100 py-16 text-center text-slate-400 text-sm">
           Aucune demande trouvée

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Spinner from "../../components/Spinner";
 
 function Reports({ API }) {
   const [startDate, setStartDate] = useState("");
@@ -156,13 +157,14 @@ function Reports({ API }) {
           <button onClick={generateReport} disabled={loading}
             className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white transition-colors disabled:opacity-60 flex items-center gap-2"
             style={{ background: "#1d4ed8" }}>
-            {loading ? (
+            {loading ? "Génération"(
               <>
-                <svg className="animate-spin" width="16" height="16" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeOpacity=".3"/>
-                  <path d="M21 12a9 9 0 00-9-9"/>
+                <svg width="16" height="16" fill="none" stroke="white" strokeWidth="2" viewBox="0 0 24 24">
+                  <line x1="18" y1="20" x2="18" y2="10"/>
+                  <line x1="12" y1="20" x2="12" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="14"/>
                 </svg>
-                Génération...
+                Générer
               </>
             ) : (
               <>
@@ -177,6 +179,8 @@ function Reports({ API }) {
           </button>
         </div>
       </div>
+
+      {loading && <Spinner text="Génération du rapport..." />}
 
       {/* Rapport généré */}
       {report && (
